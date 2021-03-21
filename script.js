@@ -112,3 +112,14 @@ document.addEventListener('mouseup', (event) => {
     keyPressed = false;
 })
 
+// fullscreen
+document.querySelector('.fullscreen').addEventListener('click', (event) => {
+    const button = event.target;
+    if (button.classList.contains('openfullscreen')) {
+        button.classList.remove('openfullscreen');
+        document.documentElement.requestFullscreen();
+    } else {
+        button.classList.add('openfullscreen');
+        document.exitFullscreen();
+    }
+})
