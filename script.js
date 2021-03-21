@@ -1,23 +1,44 @@
 
 const piano = document.querySelector('.piano');
+const pianoKey = document.querySelectorAll('.piano-key');
 const notes = document.querySelector('.btn-notes');
 const letters = document.querySelector('.btn-letters');
 const activeClass = 'btn-active';
+const keyLetter = 'piano-key-letter';
+let type = 'note';
 
 notes.addEventListener('click', () => {
-    notes.classList.toggle(activeClass);
-    letters.classList.toggle(activeClass);
+    notes.classList.add(activeClass);
+    letters.classList.remove(activeClass);
+    pianoKey.forEach(item => {
+        item.classList.remove(keyLetter);
+    })
+    type = 'note';
 });
 
 letters.addEventListener('click', () => {
-    letters.classList.toggle(activeClass);
-    notes.classList.toggle(activeClass);
-    document.querySelectorAll('.piano-key').forEach(item => {
-        item.style.display = 'block';
+    letters.classList.add(activeClass);
+    pianoKey.forEach(item => {
+        item.classList.add(keyLetter);
     })
+    notes.classList.remove(activeClass);
+    type = 'letter';
 });
 
-piano.addEventListener('click', (event) => {
+piano.addEventListener('mousedown', (event) => {
     const key = event.target;
-    console.log(key);
+    const data = key.dataset[type];
+    // трансформация клавиши
+    key.classList.add('piano-key-active');
+    key.classList.add('piano-key-active-pseudo');
+    // проигрывание звука
+})
+
+piano.addEventListener('mouseup', (event) => {
+    const key = event.target;
+    const data = key.dataset[type];
+    // трансформация клавиши
+    key.classList.remove('piano-key-active');
+    key.classList.remove('piano-key-active-pseudo');
+    // проигрывание звука
 })
