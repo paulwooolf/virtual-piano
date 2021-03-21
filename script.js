@@ -7,6 +7,7 @@ const activeClass = 'btn-active';
 const keyLetter = 'piano-key-letter';
 const audio = {};
 let type = 'note';
+let keyPressed = false;
 
 pianoKeys.forEach(item => {
     if (!item.classList.contains('none')) {
@@ -16,9 +17,13 @@ pianoKeys.forEach(item => {
 })
 
 function playAudio(item) {
-    const key = item.dataset.note;
-    audio[key].currentTime = 0;
-    audio[key].play();
+    if (!item.classList.contains('pressed')) {
+        const key = item.dataset.note;
+        if (key !== undefined) {
+            audio[key].currentTime = 0;
+            audio[key].play();
+        }
+    }
 }
 
 // Переключение видов отображения
@@ -41,11 +46,14 @@ letters.addEventListener('click', () => {
 });
 
 // Обработчики
-const checkPianoKeys = (key) => {
+const checkPianoKeys = (key, type) => {
     pianoKeys.forEach((item) => {
         if (item.dataset.letter === key) {
-            keyActive(item);
             playAudio(item);
+            keyActive(item);
+            if (type === 'mouse') {
+                keyPressed = true;
+            }
         } else {
             keyDisActive(item);
         }
@@ -53,52 +61,54 @@ const checkPianoKeys = (key) => {
 }
 
 const keyActive = (key) => {
+    key.classList.add('pressed');
     key.classList.add('piano-key-active');
     key.classList.add('piano-key-active-pseudo');
 }
 
 const keyDisActive = (key) => {
+    key.classList.remove('pressed');
     key.classList.remove('piano-key-active');
     key.classList.remove('piano-key-active-pseudo');
 }
 
 // Обработка нажатий
 document.addEventListener('keydown', (event) => {
-    event.preventDefault();
     const key = event.key.toUpperCase();
-    checkPianoKeys(key);
+    checkPianoKeys(key, 'key');
 })
 
 piano.addEventListener('mousedown', (event) => {
     event.preventDefault();
     const key = event.target.dataset.letter.toUpperCase();
-    checkPianoKeys(key);
+    checkPianoKeys(key, 'mouse');
 })
 
 piano.addEventListener('mouseover', (event) => {
-    event.preventDefault();
-    const key = event.target.dataset.letter.toUpperCase();
-    checkPianoKeys(key);
+    console.log('over');
+    const item = event.target;
+    if (!item.classList.contains('pressed') && keyPressed) {
+        const key = item.dataset.letter;
+        checkPianoKeys(key, 'mouse');
+    }
 })
 
 piano.addEventListener('mouseleave', (event) => {
-    event.preventDefault();
     pianoKeys.forEach((item) => {
         keyDisActive(item);
     })
 })
 
 document.addEventListener('keyup', (event) => {
-    event.preventDefault();
     pianoKeys.forEach((item) => {
         keyDisActive(item);
     })
 })
 
 document.addEventListener('mouseup', (event) => {
-    event.preventDefault();
     pianoKeys.forEach((item) => {
         keyDisActive(item);
     })
+    keyPressed = false;
 })
 
