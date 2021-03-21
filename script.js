@@ -74,7 +74,7 @@ const keyDisActive = (key) => {
 
 // Обработка нажатий
 document.addEventListener('keydown', (event) => {
-    const key = event.key.toUpperCase();
+    const key = event.code.slice(3);
     checkPianoKeys(key, 'key');
 })
 
